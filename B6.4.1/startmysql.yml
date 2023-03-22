@@ -1,0 +1,8 @@
+- name: Start SQL Service
+  service: name=mysqld state=restarted
+- name: create demo database
+  mysql_db: name=anupam state=present
+- name: create test user
+  mysql_user: name=test password=test priv=test.*:ALL host='%' state=present
+- name: restart mysql
+  service: name=mysqld state=restarted
