@@ -1,8 +1,24 @@
-- name: Start SQL Service
-  service: name=mysqld state=restarted
-- name: create demo database
-  mysql_db: name=anupam state=present
-- name: create test user
-  mysql_user: name=test password=test priv=test.*:ALL host='%' state=present
-- name: restart mysql
-  service: name=mysqld state=restarted
+---
+
+- hosts: localhost
+  gather_facts: true
+  tasks:
+      # install MySQL repo
+      - name: Install mysql-repo
+        ansible.builtin.yum:
+          name: https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+      # install MySQL Server
+      - name: Install mysql-server
+        ansible.builtin.yum:
+          name: mysql-server
+      # enable MySQL deamon
+      - name: Enable Mysql systemd
+        ansible.builtin.systemd:
+          name: mysqld
+          enabled: true
+          masked: no
+      # Run MySQL Server. 
+      - name: Start Mysql Service
+        ansible.builtin.systemd:
+          name: mysqld
+          state: started
